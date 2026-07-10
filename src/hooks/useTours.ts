@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import {getTours} from "../api/tourApi"
 
-export const useTours = () => {
+export const useTours = (filters = {}) => {
     return useQuery({
-        queryKey:["tours"],
-        queryFn:getTours
+        queryKey:["tours", filters],
+        queryFn:() => getTours(filters),
     })
 }

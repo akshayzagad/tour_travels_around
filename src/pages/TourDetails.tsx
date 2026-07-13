@@ -32,7 +32,7 @@ const formatRole = (role?: string) => {
 };
 
 const getTourStops = (locations?: TourLocation[], location?: TourLocation[]) =>
-  locations?.length ? locations : location ?? [];
+  locations?.length ? locations : (location ?? []);
 
 type TourApiWrapper = {
   data?: {
@@ -52,9 +52,8 @@ const TourDetails = () => {
   const { id } = useParams();
   const { data, isPending, error } = useTour(id!);
   const tour = getTourDoc(data);
-  console.log(id);
   console.log(data);
-  console.log(data?.startLocation.coordinates);
+  
   
   if (isPending) return <h2 className="p-6">Loading...</h2>;
   if (error) return <h2 className="p-6">Something went wrong</h2>;
@@ -75,7 +74,11 @@ const TourDetails = () => {
   return (
     <main className="min-h-screen bg-slate-50">
       <section className="relative h-[75vh] overflow-hidden">
-        <img src={heroImage} alt={tour.name} className="h-full w-full object-cover" />
+        <img
+          src={heroImage}
+          alt={tour.name}
+          className="h-full w-full object-cover"
+        />
 
         <div className="absolute inset-0 bg-black/55" />
 
@@ -185,7 +188,10 @@ const TourDetails = () => {
 
                 {descriptionParagraphs.length > 0 ? (
                   descriptionParagraphs.map((paragraph) => (
-                    <p key={paragraph} className="mt-4 leading-8 text-slate-600">
+                    <p
+                      key={paragraph}
+                      className="mt-4 leading-8 text-slate-600"
+                    >
                       {paragraph}
                     </p>
                   ))
@@ -231,7 +237,9 @@ const TourDetails = () => {
 
                 <div className="flex justify-between gap-6">
                   <span>Location</span>
-                  <strong>{tour.startLocation?.description ?? "Coming soon"}</strong>
+                  <strong>
+                    {tour.startLocation?.description ?? "Coming soon"}
+                  </strong>
                 </div>
               </div>
 
@@ -378,7 +386,7 @@ const TourDetails = () => {
           </p>
         </div>
 
-        <div className="flex h-[500px] items-center justify-center rounded-3xl border-2 border-dashed border-slate-300 bg-slate-100">
+        <div className="h-[500px] overflow-hidden rounded-3xl border-2 border-dashed border-slate-300 bg-slate-100">
           {/* <div className="text-center">
             <div className="mb-4 text-6xl">Map</div>
 
@@ -390,8 +398,13 @@ const TourDetails = () => {
               React Leaflet / Google Maps Integration
             </p>
           </div> */}
-          
-          <Map coordinates = {data?.startLocation.coordinates} ></Map>
+
+          <Map
+            coordinates={
+              tour.startLocation?.coordinates as [number, number] | undefined
+            }
+            location={tour.location}
+          />
         </div>
       </section>
 
@@ -409,7 +422,10 @@ const TourDetails = () => {
 
           <div className="grid gap-8 lg:grid-cols-2">
             {(tour.reviews ?? []).map((review) => (
-              <div key={review._id} className="rounded-3xl bg-white p-8 shadow-lg">
+              <div
+                key={review._id}
+                className="rounded-3xl bg-white p-8 shadow-lg"
+              >
                 <div className="mb-6 flex items-center gap-4">
                   <img
                     src={`${userImageBaseUrl}/${review.user?.photo}`}

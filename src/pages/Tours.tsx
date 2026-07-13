@@ -49,7 +49,7 @@ const Tours = () => {
 
   const { data, isLoading, error } = useTours(filters);
   const { data: totalData } = useTours(baseFilters);
-  console.log(totalData);
+  // console.log(totalData);
 
   const tours: Tour[] = data?.data?.data ?? [];
   const totalResults = totalData?.results ?? 0;

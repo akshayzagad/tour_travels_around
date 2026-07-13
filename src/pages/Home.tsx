@@ -6,7 +6,7 @@ const Home = () => {
 
   const tours = data?.data?.data ?? [];
 
-  console.log(data);
+  // console.log(data);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 

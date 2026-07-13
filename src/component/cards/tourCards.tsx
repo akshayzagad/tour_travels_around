@@ -6,6 +6,7 @@ import {
   Star,
   Clock3,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import type { Tour } from "../../../types/tour";
 
@@ -100,10 +101,11 @@ const TourCards = ({ tour }: TourCardProps) => {
             </h3>
             <p className="text-sm text-gray-500">per person</p>
           </div>
-
+          <Link to={`/tourDetail/${tour._id}`}>
           <button className="rounded-full bg-gradient-to-r from-emerald-500 to-green-600 px-6 py-3 font-semibold text-white transition hover:shadow-lg">
             View Details
           </button>
+          </Link>
         </div>
       </div>
     </article>

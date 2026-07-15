@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,39 +17,39 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo */}
-        <a href="/" className="text-3xl font-bold text-emerald-600">
+        <Link to="/" className="text-3xl font-bold text-emerald-600">
           TourGo
-        </a>
+        </Link>
 
         {/* Desktop Menu */}
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
-              href={link.path}
+              to={link.path}
               className="font-medium text-gray-700 transition hover:text-emerald-600"
             >
               {link.name}
-            </a>
+            </Link>
           ))}
         </nav>
 
         {/* Buttons */}
         <div className="hidden items-center gap-4 md:flex">
-          <button className="font-medium text-gray-700 hover:text-emerald-600">
+          <Link to="/login" className="font-medium text-gray-700 hover:text-emerald-600">
             Login
-          </button>
+          </Link>
 
-          <button className="rounded-full bg-emerald-600 px-5 py-2 text-white transition hover:bg-emerald-700">
+          <Link
+            to="/signUp"
+            className="rounded-full bg-emerald-600 px-5 py-2 text-white transition hover:bg-emerald-700"
+          >
             Sign Up
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
-        <button
-          className="md:hidden"
-          onClick={() => setIsOpen(!isOpen)}
-        >
+        <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
@@ -58,22 +59,31 @@ const Header = () => {
         <div className="border-t bg-white md:hidden">
           <nav className="flex flex-col px-6 py-4">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.path}
+                to={link.path}
+                onClick={() => setIsOpen(false)}
                 className="py-3 text-gray-700 hover:text-emerald-600"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
 
-            <button className="mt-4 rounded-lg border py-2">
+            <Link
+              to="/login"
+              onClick={() => setIsOpen(false)}
+              className="mt-4 rounded-lg border py-2 text-center"
+            >
               Login
-            </button>
+            </Link>
 
-            <button className="mt-3 rounded-lg bg-emerald-600 py-2 text-white">
+            <Link
+              to="/signUp"
+              onClick={() => setIsOpen(false)}
+              className="mt-3 rounded-lg bg-emerald-600 py-2 text-center text-white"
+            >
               Sign Up
-            </button>
+            </Link>
           </nav>
         </div>
       )}

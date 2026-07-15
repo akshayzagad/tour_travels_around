@@ -1,0 +1,27 @@
+import { useMutation } from "@tanstack/react-query";
+import { login } from "../api/autApi";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+export const useLogin = () => {
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      console.log("Login Success", data);
+      toast.success("Login successful!");
+      // slight delay ensures Supabase session is available
+      setTimeout(() => {
+        navigate("/tours", { replace: true });
+      }, 300);
+    },
+
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        console.log(error.response?.data);
+      }
+      console.log(error);
+    },
+  });
+};

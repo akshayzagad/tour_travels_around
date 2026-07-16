@@ -1,9 +1,22 @@
-import { User, Mail, Lock, Eye, EyeOff, Upload } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom"
+import type { userSignUp } from "../../types/user";
+import { useSignup } from "../hooks/useSignUp";
 import { useState } from "react";
 
 const Signup = () => {
+  const { register, handleSubmit } = useForm<userSignUp>();
+  const { mutate: signUp, isPending } = useSignup();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const onSubmit = (data: userSignUp) => {
+    console.log(data);
+    
+    signUp(data);
+  };
 
   return (
     <div
@@ -113,7 +126,7 @@ const Signup = () => {
             </p>
           </div>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             {/* Name */}
 
             <div>
@@ -146,6 +159,7 @@ const Signup = () => {
 
                 <input
                   type="text"
+                  {...register("name")}
                   placeholder="Enter your name"
                   className="
                     w-full
@@ -190,6 +204,7 @@ const Signup = () => {
 
                 <input
                   type="email"
+                  {...register("email")}
                   placeholder="Enter your email"
                   className="
                     w-full
@@ -238,6 +253,7 @@ const Signup = () => {
 
                 <input
                   type={showPassword ? "text" : "password"}
+                  {...register("password")}
                   placeholder="Create password"
                   className="
                   w-full
@@ -300,6 +316,7 @@ const Signup = () => {
 
                 <input
                   type={showConfirmPassword ? "text" : "password"}
+                  {...register("passwordConfirm")}
                   placeholder="Confirm password"
                   className="
                   w-full
@@ -337,31 +354,33 @@ const Signup = () => {
 
             {/* Profile Upload */}
 
-            <div
+            {/* <label
               className="
-              flex
-              items-center
-              gap-3
-              border
-              border-dashed
-              rounded-xl
-              p-3
-              cursor-pointer
-            "
-            >
+                          flex
+                          items-center
+                          gap-3
+                          border
+                          border-dashed
+                          rounded-xl
+                          p-3
+                          cursor-pointer
+                        "
+              >
               <Upload size={20} className="text-emerald-500" />
 
-              <span
-                className="
-                text-sm
-                text-slate-500
-              "
-              >
+              <span className="text-sm text-slate-500">
                 Upload profile photo
               </span>
-            </div>
 
-            <label
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                {...register("photo")}
+              />
+            </label> */}
+
+            {/* <label
               className="
               flex
               gap-2
@@ -371,9 +390,10 @@ const Signup = () => {
             "
             >
               <input type="checkbox" />I agree to terms & conditions
-            </label>
+            </label> */}
 
             <button
+            type="submit"
               className="
               w-full
               rounded-xl
@@ -388,7 +408,7 @@ const Signup = () => {
               transition
               "
             >
-              Create Account
+               {isPending ? "Creating..." : "Create Account"}
             </button>
           </form>
 
@@ -401,6 +421,7 @@ const Signup = () => {
           "
           >
             Already have an account?
+            <Link to={"/login"}>
             <span
               className="
               text-emerald-600
@@ -410,6 +431,7 @@ const Signup = () => {
             >
               Login
             </span>
+            </Link>
           </p>
         </div>
       </div>

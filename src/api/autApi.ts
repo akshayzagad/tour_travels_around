@@ -1,16 +1,12 @@
 import { api } from "./axios";
+import type { userSignUp, userLogin } from "../../types/user";
 
-export const signUp = async (userData: {
-  name: string;
-  email: string;
-  password: string;
-  passwordConfirm: string;
-}) => {
+export const signUp = async (userData: userSignUp) => {
   const { data } = await api.post("users/signup", userData);
   return data;
 };
 
-export const login = async (userData: { email: string; password: string }) => {
+export const login = async (userData: userLogin) => {
   const { data } = await api.post("users/login", userData);
   return data;
 };

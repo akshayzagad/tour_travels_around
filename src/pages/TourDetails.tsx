@@ -1,10 +1,12 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTour } from "../hooks/useTours";
 import type { Tour, TourLocation } from "../../types/tour";
 import Map from "../component/common/Map";
 import ReviewCards from "../component/cards/reviewCards";
 import GuideCard from "../component/cards/guideCard";
+import BookTourButton from "../component/common/BookTourButton";
 import { useUser } from "../hooks/useUser";
+import { useCheckout } from "../hooks/useCheckout ";
 
 const imageBaseUrl = `${import.meta.env.VITE_API_URL}/img/tours`;
 const userImageBaseUrl = `${import.meta.env.VITE_API_URL}/img/users`;
@@ -43,11 +45,25 @@ const getTourDoc = (value?: Tour | TourApiWrapper): Tour | undefined => {
 };
 
 const TourDetails = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { data: user } = useUser();
   const { data, isPending, error } = useTour(id!);
   const tour = getTourDoc(data);
+  const { mutate: checkout, isPending: isBooking } = useCheckout();
   // console.log(data);
+  const handleBookTour = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    checkout(id!, {
+      onSuccess: (data) => {
+        window.location.href = data.session.authorization_url;
+      },
+    });
+  };
 
   if (isPending) return <h2 className="p-6">Loading...</h2>;
   if (error) return <h2 className="p-6">Something went wrong</h2>;
@@ -237,9 +253,12 @@ const TourDetails = () => {
                 </div>
               </div>
 
-              <button className="mt-10 w-full rounded-xl bg-emerald-600 py-4 text-lg font-semibold text-white transition hover:bg-emerald-700">
-                {user ? "Book Tour" : "Please Login to Book Tour"}
-              </button>
+              <BookTourButton
+                user={user}
+                isLoading={isBooking}
+                onClick={handleBookTour}
+                className="mt-10 w-full rounded-xl bg-emerald-600 py-4 text-lg font-semibold text-white transition hover:bg-emerald-700"
+              />
 
               <p className="mt-5 text-center text-sm text-slate-500">
                 No hidden charges. Instant confirmation.
@@ -261,8 +280,9 @@ const TourDetails = () => {
           {galleryImages.map((image, index) => (
             <div
               key={`${image}-${index}`}
-              className={`overflow-hidden rounded-3xl ${index === 0 ? "lg:col-span-2 lg:row-span-2" : ""
-                }`}
+              className={`overflow-hidden rounded-3xl ${
+                index === 0 ? "lg:col-span-2 lg:row-span-2" : ""
+              }`}
             >
               <img
                 src={`${imageBaseUrl}/${image}`}
@@ -419,9 +439,12 @@ const TourDetails = () => {
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center gap-6">
-              <button className="rounded-xl bg-white px-10 py-4 text-lg font-semibold text-emerald-600 transition hover:scale-105">
-                {user ? "Book Tour" : "Please Login to Book Tour"}
-              </button>
+              <BookTourButton
+                user={user}
+                isLoading={isBooking}
+                onClick={handleBookTour}
+                className="rounded-xl bg-white px-10 py-4 text-lg font-semibold text-emerald-600 transition hover:scale-105"
+              />
 
               <button className="rounded-xl border border-white px-10 py-4 text-lg font-semibold transition hover:bg-white hover:text-emerald-600">
                 Contact Us

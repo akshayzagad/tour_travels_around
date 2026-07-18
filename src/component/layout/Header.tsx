@@ -9,8 +9,9 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useLogin } from "../../hooks/useLogin";
+// import { useLogin } from "../../hooks/useLogin";
 import { useUser } from "../../hooks/useUser";
+import { useLogout } from "../../hooks/useLogout";
 
 interface User {
   name: string;
@@ -18,13 +19,13 @@ interface User {
   photo?: string;
 }
 
-interface HeaderProps {
-  user?: User | null;
-  onLogout: () => void;
-}
+// interface HeaderProps {
+//   user?: User | null;
+//   onLogout: () => void;
+// }
 
 const Header = () => {
-
+  const { mutate: logout } = useLogout();
   const { data: user } = useUser();
   console.log(user);
 
@@ -91,7 +92,7 @@ const Header = () => {
               {user.photo ? (
 
                 <img
-                  src={user.photo}
+                  src={`${import.meta.env.VITE_API_URL}/img/users/${user.photo}`}
                   alt={user.name}
                   className="h-10 w-10 rounded-full object-cover"
                 />
@@ -179,7 +180,7 @@ const Header = () => {
 
                 {/* Logout */}
                 <button
-                  // onClick={onLogout}
+                  onClick={() => logout()}
                   className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm text-red-600 hover:bg-red-50"
                 >
                   <LogOut size={18} />

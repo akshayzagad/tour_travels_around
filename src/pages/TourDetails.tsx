@@ -2,6 +2,9 @@ import { useParams } from "react-router-dom";
 import { useTour } from "../hooks/useTours";
 import type { Tour, TourLocation } from "../../types/tour";
 import Map from "../component/common/Map";
+import ReviewCards from "../component/cards/reviewCards";
+import GuideCard from "../component/cards/guideCard";
+import { useUser } from "../hooks/useUser";
 
 const imageBaseUrl = `${import.meta.env.VITE_API_URL}/img/tours`;
 const userImageBaseUrl = `${import.meta.env.VITE_API_URL}/img/users`;
@@ -20,15 +23,6 @@ const formatDate = (date?: string) => {
     month: "long",
     year: "numeric",
   }).format(new Date(date));
-};
-
-const formatRole = (role?: string) => {
-  if (!role) return "Guide";
-
-  return role
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
 };
 
 const getTourStops = (locations?: TourLocation[], location?: TourLocation[]) =>
@@ -50,11 +44,11 @@ const getTourDoc = (value?: Tour | TourApiWrapper): Tour | undefined => {
 
 const TourDetails = () => {
   const { id } = useParams();
+  const { data: user } = useUser();
   const { data, isPending, error } = useTour(id!);
   const tour = getTourDoc(data);
   // console.log(data);
-  
-  
+
   if (isPending) return <h2 className="p-6">Loading...</h2>;
   if (error) return <h2 className="p-6">Something went wrong</h2>;
   if (!tour) return <h2 className="p-6">Tour not found</h2>;
@@ -244,7 +238,7 @@ const TourDetails = () => {
               </div>
 
               <button className="mt-10 w-full rounded-xl bg-emerald-600 py-4 text-lg font-semibold text-white transition hover:bg-emerald-700">
-                Book This Tour
+                {user ? "Book Tour" : "Please Login to Book Tour"}
               </button>
 
               <p className="mt-5 text-center text-sm text-slate-500">
@@ -267,9 +261,8 @@ const TourDetails = () => {
           {galleryImages.map((image, index) => (
             <div
               key={`${image}-${index}`}
-              className={`overflow-hidden rounded-3xl ${
-                index === 0 ? "lg:col-span-2 lg:row-span-2" : ""
-              }`}
+              className={`overflow-hidden rounded-3xl ${index === 0 ? "lg:col-span-2 lg:row-span-2" : ""
+                }`}
             >
               <img
                 src={`${imageBaseUrl}/${image}`}
@@ -348,32 +341,21 @@ const TourDetails = () => {
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2">
-            {(tour.guides ?? []).map((guide) => (
-              <div
-                key={guide._id}
-                className="rounded-3xl bg-white p-8 shadow transition hover:-translate-y-2 hover:shadow-xl"
-              >
-                <div className="flex items-center gap-6">
-                  <img
-                    src={`${userImageBaseUrl}/${guide.photo}`}
-                    alt={guide.name}
-                    className="h-24 w-24 rounded-full bg-slate-200 object-cover"
-                  />
-
-                  <div>
-                    <h3 className="text-2xl font-bold">{guide.name}</h3>
-
-                    <p className="mt-1 text-emerald-600">
-                      {formatRole(guide.role)}
-                    </p>
-
-                    <p className="mt-2 text-slate-500">{guide.email}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          {tour.guides && tour.guides.length > 0 ? (
+            <div className="grid gap-8 md:grid-cols-2">
+              {(tour.guides ?? []).map((guide) => (
+                <GuideCard
+                  key={guide._id}
+                  guide={guide}
+                  userImageBaseUrl={userImageBaseUrl}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-3xl bg-white p-12 shadow text-center text-slate-600">
+              No guides are assigned to this tour yet.
+            </div>
+          )}
         </div>
       </section>
 
@@ -420,32 +402,7 @@ const TourDetails = () => {
             </p>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-2">
-            {(tour.reviews ?? []).map((review) => (
-              <div
-                key={review._id}
-                className="rounded-3xl bg-white p-8 shadow-lg"
-              >
-                <div className="mb-6 flex items-center gap-4">
-                  <img
-                    src={`${userImageBaseUrl}/${review.user?.photo}`}
-                    alt={review.user?.name ?? "Traveler"}
-                    className="h-16 w-16 rounded-full bg-slate-300 object-cover"
-                  />
-
-                  <div>
-                    <h3 className="text-xl font-semibold">
-                      {review.user?.name ?? "Traveler"}
-                    </h3>
-
-                    <p className="text-yellow-500">Rating {review.rating}/5</p>
-                  </div>
-                </div>
-
-                <p className="leading-8 text-slate-600">{review.review}</p>
-              </div>
-            ))}
-          </div>
+          <ReviewCards tour={tour} userImageBaseUrl={userImageBaseUrl} />
         </div>
       </section>
 
@@ -463,7 +420,7 @@ const TourDetails = () => {
 
             <div className="mt-10 flex flex-wrap justify-center gap-6">
               <button className="rounded-xl bg-white px-10 py-4 text-lg font-semibold text-emerald-600 transition hover:scale-105">
-                Book Now
+                {user ? "Book Tour" : "Please Login to Book Tour"}
               </button>
 
               <button className="rounded-xl border border-white px-10 py-4 text-lg font-semibold transition hover:bg-white hover:text-emerald-600">

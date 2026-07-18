@@ -20,3 +20,8 @@ export const resetPasswords = async (token: string,userData: resetPassword) =>{
   const {data} = await api.patch(`users/resetPassword/${token}`,userData);
   return data;
 }
+
+export const logout = async () => {
+  const response = await api.get("/users/logout");
+  return response.data;
+};

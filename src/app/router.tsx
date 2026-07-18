@@ -7,6 +7,8 @@ import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
 import Tours from "../pages/Tours";
 import TourDetails from "../pages/TourDetails";
+import ForgotPassword from "../pages/ForgotPassword ";
+import ResetPassword from "../pages/resetPassword";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +26,14 @@ export const router = createBrowserRouter([
       {
         path: "signUp",
         element: <SignUp />,
+      },
+      {
+        path: "forgotPassword",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "reset-password/:token",
+        element: <ResetPassword />,
       },
       {
         path: "tours",

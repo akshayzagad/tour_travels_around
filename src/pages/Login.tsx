@@ -245,14 +245,14 @@ const Login = () => {
                 Remember me
               </label>
 
-              <a
+              <Link to={"/forgotPassword"}
                 className="
                 text-emerald-600
                 font-medium
               "
               >
                 Forgot password?
-              </a>
+              </Link>
             </div>
 
             {isError && <p className="text-red-500 mt-2">{error.message}</p>}

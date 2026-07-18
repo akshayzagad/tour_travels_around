@@ -52,7 +52,7 @@ const TourDetails = () => {
   const { id } = useParams();
   const { data, isPending, error } = useTour(id!);
   const tour = getTourDoc(data);
-  console.log(data);
+  // console.log(data);
   
   
   if (isPending) return <h2 className="p-6">Loading...</h2>;

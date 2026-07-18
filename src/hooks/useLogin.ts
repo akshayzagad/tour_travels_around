@@ -8,8 +8,8 @@ export const useLogin = () => {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: login,
-    onSuccess: (data) => {
-      console.log("Login Success", data);
+    onSuccess: () => {
+      // console.log("Login Success", data);
       toast.success("Login successful!");
       // slight delay ensures Supabase session is available
       setTimeout(() => {

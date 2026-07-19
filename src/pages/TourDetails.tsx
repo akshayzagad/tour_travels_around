@@ -1,6 +1,6 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useTour } from "../hooks/useTours";
-import type { Tour, TourLocation } from "../../types/tour";
+import type {  TourLocation } from "../../types/tour";
 import Map from "../component/common/Map";
 import ReviewCards from "../component/cards/reviewCards";
 import GuideCard from "../component/cards/guideCard";
@@ -30,27 +30,24 @@ const formatDate = (date?: string) => {
 const getTourStops = (locations?: TourLocation[], location?: TourLocation[]) =>
   locations?.length ? locations : (location ?? []);
 
-type TourApiWrapper = {
-  data?: {
-    doc?: Tour;
-  };
-};
-
-const getTourDoc = (value?: Tour | TourApiWrapper): Tour | undefined => {
-  if (!value) return undefined;
-
-  const wrappedDoc = (value as TourApiWrapper).data?.doc;
-
-  return wrappedDoc ?? (value as Tour);
-};
-
 const TourDetails = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const { id } = useParams();
   const { data: user } = useUser();
-  const { data, isPending, error } = useTour(id!);
-  const tour = getTourDoc(data);
+  // console.log(user);
+  
+  const { data:tour, isPending, error } = useTour(id!);
+  // const tour = getTourDoc(data);
+  const hasBooked = tour?.hasBooked; 
+  // console.log("tour:", tour);
+  console.log("hasBooked:", hasBooked);
+  
+
   const { mutate: checkout, isPending: isBooking } = useCheckout();
+
+  const bookingSuccess = searchParams.get("alert") === "booking";
   // console.log(data);
   const handleBookTour = () => {
     if (!user) {
@@ -83,6 +80,11 @@ const TourDetails = () => {
 
   return (
     <main className="min-h-screen bg-slate-50">
+      {bookingSuccess && (
+        <div className="rounded bg-green-100 p-4 text-green-700">
+          🎉 Tour booked successfully!
+        </div>
+      )}
       <section className="relative h-[75vh] overflow-hidden">
         <img
           src={heroImage}
@@ -257,6 +259,7 @@ const TourDetails = () => {
                 user={user}
                 isLoading={isBooking}
                 onClick={handleBookTour}
+                 hasBooked={hasBooked}
                 className="mt-10 w-full rounded-xl bg-emerald-600 py-4 text-lg font-semibold text-white transition hover:bg-emerald-700"
               />
 
@@ -441,6 +444,7 @@ const TourDetails = () => {
             <div className="mt-10 flex flex-wrap justify-center gap-6">
               <BookTourButton
                 user={user}
+                 hasBooked={hasBooked}
                 isLoading={isBooking}
                 onClick={handleBookTour}
                 className="rounded-xl bg-white px-10 py-4 text-lg font-semibold text-emerald-600 transition hover:scale-105"

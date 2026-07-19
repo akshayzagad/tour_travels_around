@@ -11,5 +11,8 @@ export const getTours = async (filters = {}) => {
 
 export const getTour = async (id: string) => {
   const { data } = await api.get(`/tours/${id}`);
-  return data.data.doc as Tour;
+  return{
+    ...data.data.doc as Tour,
+    hasBooked: data.data.hasBooked as boolean,
+  };
 };

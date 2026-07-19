@@ -26,6 +26,7 @@ export interface TourReview {
   };
 }
 
+// types/tour.ts
 export interface Tour {
   _id: string;
   name: string;
@@ -50,4 +51,5 @@ export interface Tour {
     address?: string;
     description: string;
   };
+  hasBooked?: boolean; // ✅ add this
 }

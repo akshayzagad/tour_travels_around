@@ -1,5 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import {getTour, getTours} from "../api/tourApi"
+import type { Tour } from "../../types/tour";
+
+type TourWithBooking = Tour & { hasBooked: boolean };
 
 export const useTours = (filters = {}) => {
     return useQuery({
@@ -9,7 +12,7 @@ export const useTours = (filters = {}) => {
 }
 
 export const useTour = (id:string) =>{
-return useQuery({
+return useQuery<TourWithBooking>({
     queryKey:["tour", "details", id],
     queryFn:() => getTour(id),
     enabled: !!id,

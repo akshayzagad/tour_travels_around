@@ -3,26 +3,30 @@ import type { MouseEventHandler } from "react";
 type BookTourButtonProps = {
   user?: unknown | null;
   className?: string;
+  hasBooked?: boolean;
   isLoading?:boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
 const BookTourButton = ({
-  user,
+   user,
   className = "",
-  onClick,
-  isLoading
+  hasBooked = false,
+  isLoading = false,
+  onClick
 }: BookTourButtonProps) => (
   <button
     type="button"
     className={className}
     onClick={onClick}
   >
-    {isLoading
+     {isLoading
       ? "Redirecting..."
-      : user
-      ? "Book Tour"
-      : "Please Login to Book Tour"}
+      : !user
+      ? "Please Login to Book Tour"
+      : hasBooked
+      ? "Review Tour"
+      : "Book Tour"}
   </button>
 );
 

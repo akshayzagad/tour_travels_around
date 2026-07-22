@@ -27,7 +27,7 @@ interface User {
 const Header = () => {
   const { mutate: logout } = useLogout();
   const { data: user } = useUser();
-  console.log(user);
+  // console.log(user);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -158,7 +158,7 @@ const Header = () => {
 
                 {/* Bookings */}
                 <Link
-                  to="/account/bookings"
+                  to="my-bookings"
                   onClick={() => setIsProfileOpen(false)}
                   className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm text-slate-700 hover:bg-slate-100"
                 >

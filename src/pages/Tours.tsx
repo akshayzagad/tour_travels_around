@@ -10,7 +10,7 @@ const Tours = () => {
   const [difficulty, setDifficulty] = useState("");
   const [duration, setDuration] = useState("");
   const [page, setPage] = useState(1);
-  const limit = 3;
+  const limit = 6;
 
   const baseFilters = useMemo(() => {
     const params: Record<string, string | number> = {};

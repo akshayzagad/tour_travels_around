@@ -53,3 +53,10 @@ export interface Tour {
   };
   hasBooked?: boolean; // ✅ add this
 }
+
+export interface TourSummary {
+  _id: string;
+  name: string;
+  slug: string;
+  imageCover: string;
+}

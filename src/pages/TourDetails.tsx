@@ -6,7 +6,7 @@ import ReviewCards from "../component/cards/reviewCards";
 import GuideCard from "../component/cards/guideCard";
 import BookTourButton from "../component/common/BookTourButton";
 import { useUser } from "../hooks/useUser";
-import { useCheckout } from "../hooks/useCheckout ";
+import { useCheckout } from "../hooks/useCheckout";
 
 const imageBaseUrl = `${import.meta.env.VITE_API_URL}/img/tours`;
 const userImageBaseUrl = `${import.meta.env.VITE_API_URL}/img/users`;
@@ -425,7 +425,10 @@ const TourDetails = () => {
             </p>
           </div>
 
-          <ReviewCards tour={tour} userImageBaseUrl={userImageBaseUrl} />
+          <ReviewCards
+            reviews={tour.reviews ?? []}
+            userImageBaseUrl={userImageBaseUrl}
+          />
         </div>
       </section>
 

@@ -9,6 +9,8 @@ import Tours from "../pages/Tours";
 import TourDetails from "../pages/TourDetails";
 import ForgotPassword from "../pages/ForgotPassword ";
 import ResetPassword from "../pages/resetPassword";
+import MyBookings from "../pages/MyReviews";
+import MyReviews from "../pages/MyReviews";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +40,14 @@ export const router = createBrowserRouter([
       {
         path: "tours",
         element: <Tours />,
+      },
+      {
+        path: "my-bookings",
+        element: <MyBookings />,
+      },
+      {
+        path: "my-reviews",
+        element: <MyReviews />,
       },
       {
         path: "destinations",

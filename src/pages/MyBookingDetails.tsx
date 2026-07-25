@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import TourCards from "../component/cards/tourCards";
 import Filters from "../component/common/Filters";
 import { useMyBooking } from "../hooks/useMyBooking";
+import Pagination from "../component/common/Pagination";
 
 const MyBookingDetails = () => {
 
@@ -10,6 +11,7 @@ const MyBookingDetails = () => {
   const [duration, setDuration] = useState("");
   const [page, setPage] = useState(1);
   const limit = 3;
+
 
   const baseFilters = useMemo(() => {
     const params: Record<string, string | number> = {};
@@ -69,10 +71,18 @@ const MyBookingDetails = () => {
   };
 
   const {
-    data: tours,
+    data,
     isPending,
     isError,
   } = useMyBooking(filters);
+
+ const tours = data?.data.tours;
+  const totalResults = data?.results ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalResults / limit));
+
+  console.log("results:", totalResults);
+console.log("limit:", limit);
+console.log("totalPages:", totalPages);
 
   if (isPending) {
     return <p className="p-8 text-center">Loading your bookings...</p>;
@@ -85,7 +95,7 @@ const MyBookingDetails = () => {
       </p>
     );
   }
-    console.log(tours);
+    console.log(data);
     
   return (
     <main className="min-h-[calc(100vh-18rem)] bg-slate-50">
@@ -103,7 +113,7 @@ const MyBookingDetails = () => {
           </p>
         </div>
         {/* Filter Section */}
-      <section className="-mt-10">
+      <section className="mt-2 mb-8">
         <Filters
           sort={sort}
           onSortChange={handleSortChange}
@@ -133,6 +143,14 @@ const MyBookingDetails = () => {
         )}
         
       </section>
+      {/* Pagination */}
+        <div className="mt-16 flex justify-center gap-3">
+          <Pagination
+            page={page}
+            onPageChange={setPage}
+            totalPages={totalPages}
+          />
+        </div>
     </main>
   )
 }

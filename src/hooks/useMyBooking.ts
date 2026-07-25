@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { myBookings, type BookingTourFilters } from "../api/bookingApi";
-import type { Tour } from "../../types/tour";
+import type { MyBookingsResponse } from "../../types/booking";
 
 export const useMyBooking = (filters: BookingTourFilters = {}) => {
-  return useQuery<Tour[]>({
+  return useQuery<MyBookingsResponse>({
     queryKey: ["my-bookings", filters],
     queryFn: () => myBookings(filters),
   });

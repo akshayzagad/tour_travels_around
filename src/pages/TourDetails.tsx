@@ -1,12 +1,14 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useTour } from "../hooks/useTours";
-import type {  TourLocation } from "../../types/tour";
+import type { TourLocation } from "../../types/tour";
 import Map from "../component/common/Map";
 import ReviewCards from "../component/cards/reviewCards";
 import GuideCard from "../component/cards/guideCard";
 import BookTourButton from "../component/common/BookTourButton";
 import { useUser } from "../hooks/useUser";
 import { useCheckout } from "../hooks/useCheckout";
+import { useState } from "react";
+import ReviewForm from "../component/forms/reviewForm";
 
 const imageBaseUrl = `${import.meta.env.VITE_API_URL}/img/tours`;
 const userImageBaseUrl = `${import.meta.env.VITE_API_URL}/img/users`;
@@ -33,17 +35,17 @@ const getTourStops = (locations?: TourLocation[], location?: TourLocation[]) =>
 const TourDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
 
   const { id } = useParams();
   const { data: user } = useUser();
   // console.log(user);
-  
-  const { data:tour, isPending, error } = useTour(id!);
+
+  const { data: tour, isPending, error } = useTour(id!);
   // const tour = getTourDoc(data);
-  const hasBooked = tour?.hasBooked; 
+  const hasBooked = tour?.hasBooked;
   // console.log("tour:", tour);
   console.log("hasBooked:", hasBooked);
-  
 
   const { mutate: checkout, isPending: isBooking } = useCheckout();
 
@@ -52,6 +54,11 @@ const TourDetails = () => {
   const handleBookTour = () => {
     if (!user) {
       navigate("/login");
+      return;
+    }
+
+    if (hasBooked) {
+      setIsReviewOpen(true);
       return;
     }
 
@@ -85,6 +92,7 @@ const TourDetails = () => {
           🎉 Tour booked successfully!
         </div>
       )}
+      {isReviewOpen && <ReviewForm onClose={() => setIsReviewOpen(false)} />}
       <section className="relative h-[75vh] overflow-hidden">
         <img
           src={heroImage}
@@ -259,7 +267,7 @@ const TourDetails = () => {
                 user={user}
                 isLoading={isBooking}
                 onClick={handleBookTour}
-                 hasBooked={hasBooked}
+                hasBooked={hasBooked}
                 className="mt-10 w-full rounded-xl bg-emerald-600 py-4 text-lg font-semibold text-white transition hover:bg-emerald-700"
               />
 
@@ -447,7 +455,7 @@ const TourDetails = () => {
             <div className="mt-10 flex flex-wrap justify-center gap-6">
               <BookTourButton
                 user={user}
-                 hasBooked={hasBooked}
+                hasBooked={hasBooked}
                 isLoading={isBooking}
                 onClick={handleBookTour}
                 className="rounded-xl bg-white px-10 py-4 text-lg font-semibold text-emerald-600 transition hover:scale-105"

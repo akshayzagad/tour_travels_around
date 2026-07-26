@@ -21,7 +21,11 @@ const MyReviews = () => {
           </p>
         </div>
 
-        <ReviewCards reviews={reviews ?? []} userImageBaseUrl={userImageBaseUrl} />
+        <ReviewCards
+          reviews={reviews ?? []}
+          userImageBaseUrl={userImageBaseUrl}
+          showActions
+        />
       </section>
     </main>
   );

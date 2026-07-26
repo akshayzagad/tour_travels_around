@@ -1,8 +1,12 @@
 import type { TourReview } from "../../../types/tour";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface ReviewCardsProps {
   reviews: TourReview[];
   userImageBaseUrl: string;
+  showActions?: boolean;
+  onEdit?: (review: TourReview) => void;
+  onDelete?: (review: TourReview) => void;
 }
 
 const getInitials = (name: string) =>
@@ -17,6 +21,9 @@ const getInitials = (name: string) =>
 export default function ReviewCards({
   reviews,
   userImageBaseUrl,
+  showActions = false,
+  onEdit,
+  onDelete,
 }: ReviewCardsProps) {
   if (reviews.length === 0) {
     return (
@@ -43,6 +50,29 @@ export default function ReviewCards({
             <div className="absolute right-5 top-3 font-serif text-7xl leading-none text-emerald-100 transition group-hover:text-emerald-200">
               &ldquo;
             </div>
+
+            {showActions && (
+              <div className="absolute right-15 top-3 z-10 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => onEdit?.(review)}
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-emerald-100 hover:text-emerald-700"
+                  aria-label={`Edit review by ${reviewerName}`}
+                  title="Edit review"
+                >
+                  <Pencil size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onDelete?.(review)}
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-red-100 hover:text-red-600"
+                  aria-label={`Delete review by ${reviewerName}`}
+                  title="Delete review"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            )}
 
             <div className="relative flex items-center gap-4">
               {review.user?.photo ? (

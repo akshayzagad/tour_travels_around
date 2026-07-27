@@ -24,6 +24,7 @@ const MyReviews = () => {
     <main className="min-h-[calc(100vh-18rem)] bg-slate-50">
       {isReviewOpen && (
         <ReviewForm
+         key={selectedReview?._id}
           onClose={handleCloseReviewForm}
           mode="edit"
           reviewToEdit={selectedReview}

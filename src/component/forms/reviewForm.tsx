@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { X, Star } from "lucide-react";
 import { useCreateReviews } from "../../hooks/useCreateReviews";
 import { useParams } from "react-router-dom";
@@ -12,18 +12,13 @@ type ReviewFormProps = {
 };
 
 const ReviewForm = ({ onClose, mode, reviewToEdit }: ReviewFormProps) => {
-  const [rating, setRating] = useState(1);
-  const [review, setReview] = useState("");
+  const [rating, setRating] = useState(() => reviewToEdit?.rating ?? 5);
+const [review, setReview] = useState(() => reviewToEdit?.review ?? "");
   const { createReview, isCreateReview } = useCreateReviews();
   const { updateReview, isUpdatingReview } = useUpdateReviews();
   const { id } = useParams();
 
   const isSubmitting = mode === "edit" ? isUpdatingReview : isCreateReview;
-
-  useEffect(() => {
-    setRating(reviewToEdit?.rating ?? 1);
-    setReview(reviewToEdit?.review ?? "");
-  }, [reviewToEdit, mode]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

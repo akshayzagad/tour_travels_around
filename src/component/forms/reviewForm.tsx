@@ -1,35 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, Star } from "lucide-react";
 import { useCreateReviews } from "../../hooks/useCreateReviews";
 import { useParams } from "react-router-dom";
+import type { TourReview } from "../../../types/tour";
+import { useUpdateReviews } from "../../hooks/useUpdateReviews";
 
 type ReviewFormProps = {
   onClose: () => void;
+  mode: "create" | "edit";
+  reviewToEdit?: TourReview | null;
 };
 
-const ReviewForm = ({ onClose }: ReviewFormProps) => {
-  const [rating, setRating] = useState(5);
+const ReviewForm = ({ onClose, mode, reviewToEdit }: ReviewFormProps) => {
+  const [rating, setRating] = useState(1);
   const [review, setReview] = useState("");
-  const {createReview,isCreateReview} = useCreateReviews();
+  const { createReview, isCreateReview } = useCreateReviews();
+  const { updateReview, isUpdatingReview } = useUpdateReviews();
   const { id } = useParams();
+
+  const isSubmitting = mode === "edit" ? isUpdatingReview : isCreateReview;
+
+  useEffect(() => {
+    setRating(reviewToEdit?.rating ?? 1);
+    setReview(reviewToEdit?.review ?? "");
+  }, [reviewToEdit, mode]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (mode === "edit") {
+      if (!reviewToEdit) return;
+
+      updateReview({
+        reviewId: reviewToEdit._id,
+        rating,
+        review,
+      });
+
+      return;
+    }
+
     if (!id) return;
-    
-    console.log(id);
-    
-    const reviewData = {
+
+    createReview({
       tourId: id,
       rating,
       review,
-    };
-
-    console.log(reviewData);
-
-    // Create Review Mutation
-    createReview(reviewData);
-
-    onClose();
+    });
   };
 
   return (
@@ -50,10 +67,7 @@ const ReviewForm = ({ onClose }: ReviewFormProps) => {
         </div>
 
         {/* Form */}
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6 p-6"
-        >
+        <form onSubmit={handleSubmit} className="space-y-6 p-6">
           {/* Rating */}
           <div>
             <label className="mb-3 block text-sm font-semibold text-slate-700">
@@ -107,7 +121,13 @@ const ReviewForm = ({ onClose }: ReviewFormProps) => {
               type="submit"
               className="rounded-xl bg-emerald-600 px-6 py-3 font-semibold text-white transition hover:bg-emerald-700"
             >
-              {isCreateReview ? "Submitting..." : "Submit Review"}
+              {isSubmitting
+                ? mode === "edit"
+                  ? "Saving..."
+                  : "Submitting..."
+                : mode === "edit"
+                  ? "Save Changes"
+                  : "Submit Review"}
             </button>
           </div>
         </form>

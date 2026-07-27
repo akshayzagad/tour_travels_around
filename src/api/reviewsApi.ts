@@ -24,7 +24,7 @@ export const updateReviews = async ({
   review,
   rating,
 }: UpdateReviewPayload) => {
-  const { data } = await api.patch(`/tours/reviews/${reviewId}`, {
+  const { data } = await api.patch(`/reviews/${reviewId}`, {
     review,
     rating,
   });

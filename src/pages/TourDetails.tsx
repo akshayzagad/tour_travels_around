@@ -92,7 +92,7 @@ const TourDetails = () => {
           🎉 Tour booked successfully!
         </div>
       )}
-      {isReviewOpen && <ReviewForm onClose={() => setIsReviewOpen(false)} />}
+      {isReviewOpen && <ReviewForm mode="create" onClose={() => setIsReviewOpen(false)} />}
       <section className="relative h-[75vh] overflow-hidden">
         <img
           src={heroImage}

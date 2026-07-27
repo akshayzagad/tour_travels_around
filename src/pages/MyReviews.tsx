@@ -1,13 +1,34 @@
 import ReviewCards from "../component/cards/reviewCards";
 import { useMyReviews } from "../hooks/useMyReviews";
-
+import { useState } from "react";
+import ReviewForm from "../component/forms/reviewForm";
+import type { TourReview } from "../../types/tour";
 const userImageBaseUrl = `${import.meta.env.VITE_API_URL}/img/users`;
 
 const MyReviews = () => {
   const { data: reviews } = useMyReviews();
+  const [selectedReview, setSelectedReview] = useState<TourReview | null>(null);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+
+  const handleEdit = (review: TourReview) => {
+    setSelectedReview(review);
+    setIsReviewOpen(true);
+  };
+
+  const handleCloseReviewForm = () => {
+    setIsReviewOpen(false);
+    setSelectedReview(null);
+  };
 
   return (
     <main className="min-h-[calc(100vh-18rem)] bg-slate-50">
+      {isReviewOpen && (
+        <ReviewForm
+          onClose={handleCloseReviewForm}
+          mode="edit"
+          reviewToEdit={selectedReview}
+        />
+      )}
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         <div className="mb-8 max-w-2xl sm:mb-10">
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-600">
@@ -24,6 +45,7 @@ const MyReviews = () => {
         <ReviewCards
           reviews={reviews ?? []}
           userImageBaseUrl={userImageBaseUrl}
+          onEdit={handleEdit}
           showActions
         />
       </section>

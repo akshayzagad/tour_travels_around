@@ -11,6 +11,7 @@ import ForgotPassword from "../pages/ForgotPassword ";
 import ResetPassword from "../pages/resetPassword";
 import MyReviews from "../pages/MyReviews";
 import MyBookingDetails from "../pages/MyBookingDetails";
+import MyProfile from "../pages/MyProfile";
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
       {
         path: "my-reviews",
         element: <MyReviews />,
+      },
+      {
+        path: "my-profile",
+        element: <MyProfile />,
       },
       {
         path: "destinations",

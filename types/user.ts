@@ -18,3 +18,9 @@ export interface resetPassword {
   password: string;
   passwordConfirm: string;
 }
+
+export interface updateMe {
+  name: string;
+  email: string;
+  photo?: File;
+}
